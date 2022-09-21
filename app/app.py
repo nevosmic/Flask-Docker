@@ -9,8 +9,8 @@ print("PWDDDDDDDDDD")
 print(os.getcwd())
 def csv_table():
     config = {
-        'user': 'root',
-        'password': 'root',
+        'user': 'michal',
+        'password': '28111992',
         'host': 'db',
         'port': '3306',
         'database': 'attendance_db'
