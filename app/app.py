@@ -2,22 +2,24 @@ from typing import List, Dict
 from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 #from dotenv import load_dotenv
+from sftp_connection import *
 import json
 import os
 
 app = Flask(__name__)
-
-#load_dotenv()
-@app.route('/')
-def index():
-    # get students from db:
-    config = {
+sftp_get_files()
+config = {
         'user': os.environ.get("MYSQL_USER"),
         'password': os.environ.get("MYSQL_PASSWORD"),
         'host': os.environ.get("MYSQL_HOST"),
         'port': '3306',
         'database': os.environ.get("MYSQL_DB")
-    }
+}
+
+#load_dotenv()
+@app.route('/')
+def index():
+    # get students from db:
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM csv_table')
