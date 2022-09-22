@@ -2,7 +2,7 @@ version: "2"
 services:
   app:
     build: ./app
-    image: nevosmic/bynet_docker:00
+    image: nevosmic/bynet_docker:01
     links:
       - db
     ports:
