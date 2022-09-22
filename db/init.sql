@@ -1,6 +1,7 @@
-create database attendance_db;
-use attendance_db;
+CREATE DATABASE IF NOT EXISTS attendance_db;
+USE attendance_db;
 
+DROP TABLE IF EXISTS csv_table;
 
 CREATE TABLE csv_table (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -19,6 +20,6 @@ CREATE TABLE csv_table (
 INSERT INTO csv_table
   (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
 VALUES
-  ("Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "Almog Menashe", "almo99walla@gmail.com", "2022-08-03 16:01:27", "2022-08-03 19:44:21", "223", "Desktop app");
+  ("Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "Keren", "keren@gmail.com", "2022-08-03 16:01:27", "2022-08-03 19:44:21", "223", "Desktop app");
 
 
