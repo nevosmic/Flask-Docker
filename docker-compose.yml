@@ -2,7 +2,7 @@ version: "2"
 services:
   app:
     build: ./app
-    image: nevosmic/bynet_docker:01
+    image: nevosmic/bynet_docker:02
     links:
       - db
     ports:
@@ -22,4 +22,4 @@ services:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "attendance_db"
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d/:ro

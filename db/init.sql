@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS attendance_db;
-USE attendance_db;
+use attendance_db;
 
 DROP TABLE IF EXISTS csv_table;
 
@@ -15,7 +15,7 @@ CREATE TABLE csv_table (
   Attendance_Duration VARCHAR(45) NOT NULL,
   Connection_Type VARCHAR(200) NOT NULL
 
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 INSERT INTO csv_table
   (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)

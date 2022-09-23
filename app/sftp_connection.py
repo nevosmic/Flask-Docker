@@ -17,13 +17,14 @@ def sftp_get_files():
         sftp.cwd('../../var/tmp/csv_files/')
         print('change to a remote directory  {}'.format(sftp.pwd))
         directory_structure = sftp.listdir_attr()
+        csv_files = []
         # Print data
         for attr in directory_structure:
-
-            print(attr.filename)
+            if attr.filename.startswith('participant-'):
+                csv_files.append(attr.filename)
+                # print(attr.filename)
             # Define the local path where the file will be saved
-
             localFilePath = 'static/files/{}'.format(attr.filename)
-            print(localFilePath)
             sftp.get(attr.filename, localFilePath)
+        return csv_files
 

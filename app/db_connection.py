@@ -17,5 +17,4 @@ def get_connection_to_mysql():
         print("You're connected to database: ", db)
     else:
         print('Not connected.')
-    return connection, cursor
-
+    return connection
