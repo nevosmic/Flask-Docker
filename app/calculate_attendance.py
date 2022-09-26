@@ -291,9 +291,9 @@ def add_avg_time(df, sum_max):
     avg = {}
     i = 0
     for idx in df.index:
-        av = round((sum_row.iloc[i, 0] / sum_max) * 100, 1)
+        av = round((sum_row.iloc[i, 0] / sum_max) * 100)
         avg[idx] = str(av)+ " %"
-        sum[idx] = str(sum_row.iloc[i, 0])
+        sum[idx] = str(round(sum_row.iloc[i, 0]))
         i += 1
     df['average'] = df.index.map(avg)
     df['total time'] = df.index.map(sum)
@@ -328,7 +328,8 @@ def calculate_attendance(db_fetch):
     new_df = add_avg_time(new_df, sum_maxes)
 
     new_df = add_names(new_df, init_dict)
-    final_df = pd.concat([new_df.iloc[:, 0:1], new_df.iloc[:, -2:], new_df.iloc[:, -1:]], axis=1)
+    new_df.to_csv("not_final_output.csv")
+    final_df = pd.concat([new_df.iloc[:, 0:1], new_df.iloc[:, -2:]], axis=1)
     # print('final_df:', final_df)
     print("DONE!!!")
     final_df.to_csv('attendance_output.csv')

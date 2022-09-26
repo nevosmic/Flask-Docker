@@ -12,39 +12,22 @@ import csv
 
 app = Flask(__name__)
 
-csv_files = sftp_get_files()
-
 
 # load_dotenv()
-def insert_to_db():
-    connection = get_connection_to_mysql()
-    
-    print("AFTER CONNECT")
-    connection.cursor().execute('SELECT * FROM csv_table')
-    students = cursor.fetchall()
-    print("STUDENTS")
-    print(students)
-    
-    sql = "INSERT INTO csv_table (`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-    val = ("Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "MIMI", "MIMI@gmail.com",
-           "2022-08-03 16:01:27", "2022-08-03 19:44:21", "223", "Desktop app")
-    connection.cursor().execute(sql, val)
-    connection.commit()
 
 
 def insert_csv_to_db(path_to_csv):
     connection = get_connection_to_mysql()
     with open(path_to_csv, newline='', encoding='utf-16') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='\t')
+        # skip header
         next(spamreader, None)
-        print("BEFORE INSERT")
         for row in spamreader:
             Meeting_Name, Meeting_Start_Time_str, Meeting_End_Time_str, Name, Attendee_Email, Join_Time_str, Leave_Time_str, Attendance_Duration_str, Connection_Type = row
             Meeting_Start_Time, Meeting_End_Time, Join_Time, Leave_Time, Attendance_Duration = parse_times(
                 Meeting_Start_Time_str, Meeting_End_Time_str, Join_Time_str, Leave_Time_str, Attendance_Duration_str)
             sql = "INSERT INTO csv_table (`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             val = (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
-            # sql = "INSERT INTO `csv_table` (`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
             connection.cursor().execute(sql, val)
             connection.commit()
@@ -61,25 +44,47 @@ def parse_times(start_, end_, join_, leave_, duration_):
 
 @app.route('/')
 def index():
-    # get students from db:
-    # connection, cursor = get_connection_to_mysql()
-    connection = get_connection_to_mysql()
-    cursor = connection.cursor()
-    cursor.execute('SELECT * FROM csv_table')
-    students = cursor.fetchall()
-    calculate_attendance(students)
-    return render_template('students.html', data=students)
+    students_list = create_students_display_list_from_csv()
+    return render_template('students.html', data=students_list)
 
 
-if __name__ == '__main__':
-
+def csv_files_handler():
+    """ get files by sftp and insert them to csv_table in database"""
+    csv_files = sftp_get_files()
     print("CSV FILES:")
     print(csv_files)
-    # insert_to_db()
 
     for file_name in csv_files:
         file_path = 'static/files/{}'.format(file_name)
         insert_csv_to_db(file_path)
     print("Done !")
+
+
+def create_students_list_csv():
+    # get students from db:
+    connection = get_connection_to_mysql()
+    cursor = connection.cursor()
+    cursor.execute('SELECT * FROM csv_table')
+    students = cursor.fetchall()
+    # create a csv file with avarage and
+    calculate_attendance(students)
+
+
+def create_students_display_list_from_csv():
+    csvfile = open('attendance_output.csv', newline='')
+    # make a new variable - c - for Python's DictReader object
+    c = csv.DictReader(csvfile)
+    # read from DictReader object using the column headings from the CSV as the dict keys
+    # header
+    students = [['Name','Average participation', 'Total time (minutes)','Email name']]
+    for row in c:
+        students.append([row['names'], row['average'], row['total time'],row['']])
+    return students
+
+
+""" DOTO: 1)log file 2)env file"""
+if __name__ == '__main__':
+    csv_files_handler()
+    create_students_list_csv()
 
     app.run(host='0.0.0.0', debug=True)
