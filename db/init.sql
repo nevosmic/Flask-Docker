@@ -20,6 +20,6 @@ CREATE TABLE csv_table (
 INSERT INTO csv_table
   (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
 VALUES
-  ("Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "Keren", "keren@gmail.com", "2022-08-03 16:01:27", "2022-08-03 19:44:21", "223", "Desktop app");
+  ("Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "Michal Nevo", "nevosmic28@gmail.com", "2022-08-03 16:01:27", "2022-08-03 15:37:33", "10", "Desktop app");
 
 

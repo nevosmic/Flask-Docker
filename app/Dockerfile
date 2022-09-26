@@ -15,4 +15,4 @@ RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted
 
 # Run app.py when the container launches
 COPY app.py /app
-CMD python app.py
+CMD sleep 10;python app.py

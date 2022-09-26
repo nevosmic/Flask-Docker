@@ -25,5 +25,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
+    healthcheck:
+            test: ["CMD", "mysqladmin" ,"ping", "-h", "db"]
+            timeout: 20s
+            retries: 10
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro
