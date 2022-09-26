@@ -4,9 +4,11 @@ import mysql.connector
 # from dotenv import load_dotenv
 from db_connection import *
 from sftp_connection import *
+from calculate_attendance import *
 import json
 import os
 import csv
+
 
 app = Flask(__name__)
 
@@ -40,8 +42,6 @@ def insert_csv_to_db(path_to_csv):
             Meeting_Name, Meeting_Start_Time_str, Meeting_End_Time_str, Name, Attendee_Email, Join_Time_str, Leave_Time_str, Attendance_Duration_str, Connection_Type = row
             Meeting_Start_Time, Meeting_End_Time, Join_Time, Leave_Time, Attendance_Duration = parse_times(
                 Meeting_Start_Time_str, Meeting_End_Time_str, Join_Time_str, Leave_Time_str, Attendance_Duration_str)
-            print("NAME")
-            print(Name)
             sql = "INSERT INTO csv_table (`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
             val = (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
             # sql = "INSERT INTO `csv_table` (`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -67,8 +67,7 @@ def index():
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM csv_table')
     students = cursor.fetchall()
-    print("STUDENTS")
-    print(students)
+    calculate_attendance(students)
     return render_template('students.html', data=students)
 
 
