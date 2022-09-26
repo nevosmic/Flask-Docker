@@ -20,16 +20,16 @@ OVERALL_TIME = "Attendance Duration"
 PLATFORM = "Connection Type"
 
 
-def get_files(fetched_list):
+def get_csv_list(fetched_list):
     """
-    calculates a list containing all participants files
-    :param fetched_list: tuples list of all csv files that came from the database
-    :return: a list of lists of tuples of all participants files
+    calculates a list containing all participants csv data - each list came from one csv file (single Webex meeting)
+    :param fetched_list: tuples list of all csv file's data that came from database
+    :return: a list of lists of tuples of all participants Webex data
     """
 
-    # list of lists of tuples : [[(id,Meeting Name,Meeting Start Time,Meeting End Time...),(id,Meeting Name...)],[()]]
+    # list of lists of tuples : [[(Meeting Name,Meeting Start Time,Meeting End Time...),(Meeting Name...)],[()]]
     list_of_meetings = []
-    # group by Meeting Start Time
+    # Group by Meeting Start Time
     for key, group in itertools.groupby(fetched_list, operator.itemgetter(1)):
         list_of_meetings.append(list(group))
 
@@ -39,53 +39,39 @@ def get_files(fetched_list):
     return list_of_meetings
 
 
-def get_data(csv_data):
+def get_data(meeting_data):
     """
-    analyzes the data from a csv file and returning it as a pd.DataFrame
+    analyzes the data from a list created from a Webex meeting and returning it as a pd.DataFrame
     :param csv_data: list of tuples
     :return: pd.DataFrame sorted by the join times and the maximal overall login time in the file
     """
     # create DataFrame using csv data
-    #print('csv_data:',csv_data)
-    df = pd.DataFrame(csv_data, columns=[ROOM_NAME, ROOM_START, ROOM_FINISH, NAMES, EMAILS, JOIN_TIME, LEAVE_TIME, OVERALL_TIME, PLATFORM])
-
+    df = pd.DataFrame(meeting_data, columns=[ROOM_NAME, ROOM_START, ROOM_FINISH, NAMES, EMAILS, JOIN_TIME, LEAVE_TIME, OVERALL_TIME, PLATFORM])
     # calculate maximal overall login time in the file:
     df.sort_values(by=[LEAVE_TIME], ascending=False, inplace=True)  # descending order by leave time
-
     latest = str(df.iloc[0, LEAVE_TIME_NUM]).rsplit(" ")[1]     # take first row after sort
-    #print("latest",latest)
     latest_hour = int(latest.rsplit(":")[0])
-    #print("latest_hour", latest_hour)
     latest_min = int(latest.rsplit(":")[1])
-    #print("latest_min", latest_min)
     df.sort_values(by=[JOIN_TIME], ascending=True, inplace=True)    # ascending order by join time
     earliest = str(df.iloc[0, JOIN_TIME_NUM]).rsplit(" ")[1]  # take first row after sort
-    #print("earliest", earliest)
-
     earliest_hour = int(earliest.rsplit(":")[0])
-    #print("earliest_hour", earliest_hour)
-
     earliest_min = int(earliest.rsplit(":")[1])
-    #print("earliest_min", earliest_min)
     max_overall = (latest_hour - earliest_hour) * 60 + (latest_min-earliest_min)
-    #print("max_overall", max_overall)
 
     return df, max_overall
 
 
 def init(fetched_list):
     """
-    initiates all parameters that are needed for the script: the dictionary of the participants, list of csv files
+    initiates all parameters that are needed for the script: the dictionary of the participants, list of csv data lists
     and the initiative pd.DataFrame
-    :return: pd.DataFrame, list of csv files and the dictionary of the participants
+    :return: pd.DataFrame, list of csv data and the dictionary of the participants
     """
     time_dict = {}
-    csv_list = get_files(fetched_list)
-
+    csv_list = get_csv_list(fetched_list)
     init_data, m = get_data(csv_list[0])
     dict_init(init_data, time_dict)
     df = pd.DataFrame(index=time_dict.keys())
-    #csv_list = csv_list[1:]
 
     return df, csv_list, time_dict
 
@@ -118,7 +104,7 @@ def check_hebrew(s):
 
 def dict_init(df, time_dict):
     """
-    initiates the participant's dictionary for every file
+    initiates the participant's dictionary for every Webex meeting
     :param df: pd.DataFrame
     :param time_dict: dictionary of the participants
     """
@@ -225,7 +211,7 @@ def special_cases(time_dict):
 
 def add_csv(meeting_data, time_dict, new_overall):
     """
-    adding every csv as a new column and analyzing it
+    adding every meeting data as a new column and analyzing it
     :param meeting_data: list of tuples
     :param time_dict: dictionary
     :param new_overall: new pd.DataFrame for the overall login time
@@ -279,9 +265,9 @@ def add_names(df, time_dict):
     return df
 
 
-def add_avg_time(df, sum_max):
+def add_avg_and_total_time(df, sum_max):
     """
-    adds an average time row to the end of the DataFrame
+    adds an average time row and a total time row to the end of the DataFrame
     :param df: pd.DataFrame
     :param sum_max: sum of maximum time of every row
     :return: pd.DataFrame
@@ -301,7 +287,11 @@ def add_avg_time(df, sum_max):
 
 
 def filter_db_fetch(db_fetch):
-    """ Convert datetime values to string and remove id """
+    """
+    Convert datetime values to string and remove id
+    :param db_fetch: fetched records from database list of tuples
+    :return: new_db_fetch: processed fetched records
+    """
     new_db_fetch = []
     for record in db_fetch:
         new_record = ()
@@ -315,6 +305,10 @@ def filter_db_fetch(db_fetch):
 
 
 def calculate_attendance(db_fetch):
+    """
+        Creates a csv file with student's attendance statistics (based by Webex meeting data ONLY)
+        :param db_fetch: fetched records from database list of tuples
+    """
     new_db_fetch = filter_db_fetch(db_fetch)
     new_df, csv_files, init_dict = init(new_db_fetch)
 
@@ -322,15 +316,11 @@ def calculate_attendance(db_fetch):
     for csv in csv_files:
         new_df, max_row = add_csv(csv, init_dict, new_df)
         sum_maxes += max_row
-    print(new_df)
-
     new_df.sort_index(axis=1, inplace=True)
-    new_df = add_avg_time(new_df, sum_maxes)
-
+    new_df = add_avg_and_total_time(new_df, sum_maxes)
     new_df = add_names(new_df, init_dict)
     new_df.to_csv("not_final_output.csv")
     final_df = pd.concat([new_df.iloc[:, 0:1], new_df.iloc[:, -2:]], axis=1)
-    # print('final_df:', final_df)
     print("DONE!!!")
     final_df.to_csv('attendance_output.csv')
 
@@ -338,7 +328,7 @@ def calculate_attendance(db_fetch):
 if __name__ == '__main__':
 
     '''
-    db_fetch = [(1496, "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),
+    demo_db_fetch = [(1496, "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),
                  datetime.datetime(2022, 9, 21, 20, 6, 10), 'gal frylich', 'galfrylich@gmail.com',
                  datetime.datetime(2022, 9, 21, 16, 8, 23), datetime.datetime(2022, 9, 21, 16, 11, 17), '3',
                  'Mobile app'), (1497, "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),

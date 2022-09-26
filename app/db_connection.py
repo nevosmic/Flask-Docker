@@ -1,5 +1,7 @@
 import mysql.connector
 import os
+
+
 def get_connection_to_mysql():
     config = {
         'user': os.environ.get("MYSQL_USER"),

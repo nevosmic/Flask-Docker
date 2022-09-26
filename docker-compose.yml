@@ -2,7 +2,7 @@ version: "2"
 services:
   app:
     build: ./app
-    image: nevosmic/bynet_docker:03
+    image: nevosmic/bynet_docker:${TAG}
     links:
       - db
     ports:
@@ -10,16 +10,20 @@ services:
     volumes:
       - ./app:/app
     environment:
-      MYSQL_HOST: "db"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "root"
-      MYSQL_DB: "attendance_db"
+      SFTP_HOST: ${SFTP_HOST}
+      SFTP_PORT: ${SFTP_PORT}
+      SFTP_USER: ${SFTP_USER}
+      SFTP_PASSWORD: ${SFTP_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DB: ${MYSQL_DB}
   db:
     image: mysql:5.7
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "attendance_db"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro

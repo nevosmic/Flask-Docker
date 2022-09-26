@@ -1,24 +1,17 @@
-from typing import List, Dict
 from flask import Flask, render_template, request, redirect, url_for
-import mysql.connector
-# from dotenv import load_dotenv
+
 from db_connection import *
 from sftp_connection import *
 from calculate_attendance import *
-import json
-import os
 import csv
 
 
 app = Flask(__name__)
+#connection = get_connection_to_mysql()
 
 
-# load_dotenv()
-
-
-def insert_csv_to_db(path_to_csv):
-    connection = get_connection_to_mysql()
-    with open(path_to_csv, newline='', encoding='utf-16') as csvfile:
+def insert_csv_to_db(path_to_csvs, connection):
+    with open(path_to_csvs, newline='', encoding='utf-16') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='\t')
         # skip header
         next(spamreader, None)
@@ -48,7 +41,7 @@ def index():
     return render_template('students.html', data=students_list)
 
 
-def csv_files_handler():
+def csv_files_handler(connection):
     """ get files by sftp and insert them to csv_table in database"""
     csv_files = sftp_get_files()
     print("CSV FILES:")
@@ -56,17 +49,17 @@ def csv_files_handler():
 
     for file_name in csv_files:
         file_path = 'static/files/{}'.format(file_name)
-        insert_csv_to_db(file_path)
+        insert_csv_to_db(file_path, connection)
     print("Done !")
 
 
-def create_students_list_csv():
-    # get students from db:
-    connection = get_connection_to_mysql()
+def create_students_list_csv(connection):
+    # get students from db
+    #connection = get_connection_to_mysql()
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM csv_table')
     students = cursor.fetchall()
-    # create a csv file with avarage and
+    # create a csv file with participation statistics
     calculate_attendance(students)
 
 
@@ -84,7 +77,8 @@ def create_students_display_list_from_csv():
 
 """ DOTO: 1)log file 2)env file"""
 if __name__ == '__main__':
-    csv_files_handler()
-    create_students_list_csv()
+    connection = get_connection_to_mysql()
+    csv_files_handler(connection)
+    create_students_list_csv(connection)
 
     app.run(host='0.0.0.0', debug=True)
