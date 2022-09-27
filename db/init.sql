@@ -14,7 +14,7 @@ CREATE TABLE csv_table (
   Leave_Time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   Attendance_Duration VARCHAR(45) NOT NULL,
   Connection_Type VARCHAR(200) NOT NULL
-
+  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 INSERT INTO csv_table

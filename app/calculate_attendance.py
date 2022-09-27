@@ -156,10 +156,11 @@ def dict_build(df, time_dict):
     dict_init(df, time_dict)
     for index, row in df.iterrows():
         file_email = str(row[EMAILS])
+        file_name = row[NAMES]
         username = file_email.rsplit('@')[0]
         if time_dict.get(username):  # if the email is spelled correctly then it is in the dictionary
             dict_update(username, time_dict, row[JOIN_TIME], row[LEAVE_TIME], row[OVERALL_TIME])
-        elif "bynet" in file_email or "8200" in file_email or "nan" in file_email:  # skipping the non-students:
+        elif "bynet" in file_email or "8200" in file_email or "nan" in file_email or "Call-in User_2" in file_name:  # skipping the non-students:
             continue
         else:
             # checking if is misspelled and correcting it:
