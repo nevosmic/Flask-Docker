@@ -45,6 +45,7 @@ def get_data(meeting_data):
     :param csv_data: list of tuples
     :return: pd.DataFrame sorted by the join times and the maximal overall login time in the file
     """
+
     # create DataFrame using csv data
     df = pd.DataFrame(meeting_data, columns=[ROOM_NAME, ROOM_START, ROOM_FINISH, NAMES, EMAILS, JOIN_TIME, LEAVE_TIME, OVERALL_TIME, PLATFORM])
     # calculate maximal overall login time in the file:
@@ -301,7 +302,7 @@ def filter_db_fetch(db_fetch):
                 new_record = new_record + (val.strftime("%m-%d-%Y %H:%M:%S"),)
             else:
                 new_record = new_record + (val,)
-        new_db_fetch.append(new_record[1:])
+        new_db_fetch.append(new_record[2:])
     return new_db_fetch
 
 
@@ -328,18 +329,18 @@ def calculate_attendance(db_fetch):
 
 if __name__ == '__main__':
 
-    '''
-    demo_db_fetch = [(1496, "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),
+    """
+    demo_db_fetch = [(1496, "20220803171241", "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),
                  datetime.datetime(2022, 9, 21, 20, 6, 10), 'gal frylich', 'galfrylich@gmail.com',
                  datetime.datetime(2022, 9, 21, 16, 8, 23), datetime.datetime(2022, 9, 21, 16, 11, 17), '3',
-                 'Mobile app'), (1497, "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),
+                 'Mobile app'), (1497, "20220803171241",  "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 21, 15, 45, 31),
                                  datetime.datetime(2022, 9, 21, 20, 6, 10), 'Yossi Bengaev', 'yossibenga@gmail.com',
                                  datetime.datetime(2022, 9, 21, 19, 8, 49), datetime.datetime(2022, 9, 21, 19, 9, 52),
-                                 '2', 'Desktop app'), (1498, "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 22, 15, 45, 31),
+                                 '2', 'Desktop app'), (1498, "20220803171241",  "Avichay Har Tov's Personal Room", datetime.datetime(2022, 9, 22, 15, 45, 31),
                                  datetime.datetime(2022, 9, 22, 20, 6, 10), 'Keren', 'Keren@gmail.com',
                                  datetime.datetime(2022, 9, 22, 19, 8, 49), datetime.datetime(2022, 9, 22, 19, 9, 52),
                                  '2', 'Desktop app')]
-    '''
+    """
     calculate_attendance(db_fetch)
 
 

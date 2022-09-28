@@ -9,25 +9,34 @@ import csv
 app = Flask(__name__)
 
 
-def insert_csv_to_db(path_to_csv, connection):
+def insert_csv_to_db(path_to_csv, file_num, connection):
     """
         Insert csv rows into 'csv_table' in database.
-        :param path_to_csv: a path to one of the csv file
-        :param connection: mysql connection object (created in db_connection)
+        In order not to reinsert a file that has already been inserted into the table, I check it with a query.
+        :param: path_to_csv: a path to one of the csv file
+        :param: file_num: csv file name
+        :param: connection: mysql connection object (created in db_connection)
     """
-    with open(path_to_csv, newline='', encoding='utf-16') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='\t')
-        # skip header
-        next(spamreader, None)
-        for row in spamreader:
-            Meeting_Name, Meeting_Start_Time_str, Meeting_End_Time_str, Name, Attendee_Email, Join_Time_str, Leave_Time_str, Attendance_Duration_str, Connection_Type = row
-            Meeting_Start_Time, Meeting_End_Time, Join_Time, Leave_Time, Attendance_Duration = parse_times(
-                Meeting_Start_Time_str, Meeting_End_Time_str, Join_Time_str, Leave_Time_str, Attendance_Duration_str)
-            sql = "INSERT IGNORE INTO csv_table (`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            val = (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
+    cursor = connection.cursor()
+    check_if_file_exists = "SELECT * FROM csv_table WHERE File_Name LIKE {}".format(file_num)
+    cursor.execute(check_if_file_exists)
+    file_in_db = cursor.fetchall()
+    if len(file_in_db) == 0:
+        with open(path_to_csv, newline='', encoding='utf-16') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter='\t')
+            # skip header
+            next(spamreader, None)
+            for row in spamreader:
+                Meeting_Name, Meeting_Start_Time_str, Meeting_End_Time_str, Name, Attendee_Email, Join_Time_str, Leave_Time_str, Attendance_Duration_str, Connection_Type = row
+                Meeting_Start_Time, Meeting_End_Time, Join_Time, Leave_Time, Attendance_Duration = parse_times(
+                    Meeting_Start_Time_str, Meeting_End_Time_str, Join_Time_str, Leave_Time_str, Attendance_Duration_str)
+                sql = "INSERT IGNORE INTO csv_table (`File_Name`,`Meeting_Name`,`Meeting_Start_Time`,`Meeting_End_Time`, `Name`,`Attendee_Email`,`Join_Time`, `Leave_Time`, `Attendance_Duration`, `Connection_Type`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (file_num, Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
 
-            connection.cursor().execute(sql, val)
-            connection.commit()
+                cursor.execute(sql, val)
+                connection.commit()
+    else:
+        print('{} file is already in db '.format(file_num))
 
 
 def parse_times(start_, end_, join_, leave_, duration_):
@@ -54,13 +63,13 @@ def csv_files_handler(connection):
         :param connection: mysql connection object (created in db_connection
     """
     csv_files = sftp_get_files()
-    print("CSV FILES:")
-    print(csv_files)
+    print("GOT CSV FILES")
 
     for file_name in csv_files:
         file_path = 'static/files/{}'.format(file_name)
-        insert_csv_to_db(file_path, connection)
-    print("Done !")
+        file_name = file_name.split('-')[1]
+        file_num = file_name.split('.')[0]
+        insert_csv_to_db(file_path, file_num, connection)
 
 
 def create_students_list_csv(connection):

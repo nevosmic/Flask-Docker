@@ -1,17 +1,16 @@
 import pysftp
-
-sftpHost = '185.164.16.144'
-sftpPort = 22
-userName = 'michaln'
-password = 'misH2911'
+import os
 
 
 def sftp_get_files():
-    """ this code will actually blindly accept any host key (cnopts.hostkeys = None), which is a security flaw."""
+    """ 
+    Connect via sftp and download the csv files to static/files/ directory.
+    This code will actually blindly accept any host key (cnopts.hostkeys = None), which is a security flaw.
+    """
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
-    with pysftp.Connection(host=sftpHost, username=userName, password=password, cnopts=cnopts) as sftp:
-        print("Connection succesfully established … ")
+    with pysftp.Connection(host=os.environ.get("SFTP_HOST"), username=os.environ.get("SFTP_USER"), password=os.environ.get("SFTP_PASSWORD"), cnopts=cnopts) as sftp:
+        print("Connection sftp succesfully established … ")
         print(sftp.pwd)
         # change to a remote directory
         sftp.cwd('../../var/tmp/csv_files/')

@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS csv_table;
 
 CREATE TABLE csv_table (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  File_Name VARCHAR(200) NOT NULL,
   Meeting_Name VARCHAR(200) NOT NULL,
   Meeting_Start_Time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   Meeting_End_Time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -18,8 +19,8 @@ CREATE TABLE csv_table (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 INSERT INTO csv_table
-  (Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
+  (File_Name, Meeting_Name, Meeting_Start_Time, Meeting_End_Time, Name, Attendee_Email, Join_Time, Leave_Time, Attendance_Duration, Connection_Type)
 VALUES
-  ("Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "Michal Nevo", "nevosmic28@gmail.com", "2022-08-03 16:01:27", "2022-08-03 15:37:33", "10", "Desktop app");
+  ("20220803171241","Jeff Macloues Personal Room", "2022-08-03 15:27:33", "2022-08-03 19:44:16", "Michal Nevo", "nevosmic28@gmail.com", "2022-08-03 16:01:27", "2022-08-03 15:37:33", "10", "Desktop app");
 
 
