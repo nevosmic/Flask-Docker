@@ -7,5 +7,6 @@ Here you can find my docker image:
 [dockerhub repository](https://hub.docker.com/repository/docker/nevosmic/bynet_docker)
 
 <img src="app/screen-shots/table.png" width="300">
-![video](https://clipchamp.com/watch/Xyxd3XAE7gt)
+![video](https://im2.ezgif.com/tmp/ezgif-2-1c105e6c74.gif)
+
 
