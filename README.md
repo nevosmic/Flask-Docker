@@ -9,5 +9,6 @@ Here you can find my docker image:
 <img src="app/screen-shots/table.png" width="300">
 
 [video](https://im2.ezgif.com/tmp/ezgif-2-64da1161d7.mp4)
+https://im2.ezgif.com/tmp/ezgif-2-64da1161d7.mp4
 
 
