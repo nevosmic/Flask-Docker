@@ -1,7 +1,7 @@
 pipeline {
-     environment {
-     ImageTag='nevosmic/bynet_docker:v0.6'
-     }
+     
+     ImageTag="nevosmic/bynet_docker:v0.6"
+     
     
     agent any
     stages {
