@@ -9,7 +9,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sctipt {
+                script {
                     image=docker.build(ImageTag)
                 }
                 
