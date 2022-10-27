@@ -12,9 +12,11 @@ pipeline {
         }
         stage('Build') {
             steps {
-                script {
-                    image=docker.build(ImageTag)
-                }
+                dir("app") {
+                    script {
+                         image = docker.build(imageTag)
+                    }
+               }
                 
             }
         }
