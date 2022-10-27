@@ -1,5 +1,8 @@
 pipeline {
-    ImageTag='nevosmic/bynet_docker:v0.6'
+     environment {
+     ImageTag='nevosmic/bynet_docker:v0.6'
+     }
+    
     agent any
     stages {
         stage('checkout') {
