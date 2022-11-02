@@ -1,7 +1,8 @@
 import pysftp
 import os
 
-
+#with pysftp.Connection(host='185.164.16.144', username='michaln', password='misH2911', cnopts=cnopts) as sftp:
+#with pysftp.Connection(host=os.environ.get("SFTP_HOST"), username=os.environ.get("SFTP_USER"), password=os.environ.get("SFTP_PASSWORD"), cnopts=cnopts) as sftp:
 def sftp_get_files():
     """ 
     Connect via sftp and download the csv files to static/files/ directory.
@@ -9,6 +10,7 @@ def sftp_get_files():
     """
     cnopts = pysftp.CnOpts()
     cnopts.hostkeys = None
+
     with pysftp.Connection(host=os.environ.get("SFTP_HOST"), username=os.environ.get("SFTP_USER"), password=os.environ.get("SFTP_PASSWORD"), cnopts=cnopts) as sftp:
         print("Connection sftp succesfully established … ")
         print(sftp.pwd)
