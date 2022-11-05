@@ -23,7 +23,7 @@ pipeline {
 		        stage('Run') {
             steps {
 		    sh '''pwd'''
-		    sh '''ls'''
+		    sh '''ls -a'''
                     sh '''docker-compose up -d'''
                
                 
