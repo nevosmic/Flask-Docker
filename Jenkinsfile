@@ -27,7 +27,12 @@ pipeline {
 			sh '''whoami'''
 		    sh '''ls -a'''
 			echo "main_script"
-			sh '''bash main_script.sh'''  
+			sshagent(credentials: ['ssh-test-key']) {
+				 sh '''
+					ssh ec2-user@test "mkdir -p /home/ec2-user/final-proj"
+					ssh ec2-user@test "hostname"
+				   '''
+			} 
                 
             }
         }
