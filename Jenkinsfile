@@ -20,12 +20,13 @@ pipeline {
                 
             }
         }
-		        stage('Run') {
+		stage('Test') {
             steps {
+			echo "Test"
 		    sh '''pwd'''
 		    sh '''ls -a'''
-                    sh '''docker-compose up -d'''
-               
+			echo "main_script"
+			sh '''bash main_script.sh'''  
                 
             }
         }
