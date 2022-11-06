@@ -26,11 +26,22 @@ pipeline {
 		    sh '''pwd'''
 			sh '''whoami'''
 		    sh '''ls -a'''
-			echo "main_script"
 			sshagent(credentials: ['ssh-test-key']) {
 				 sh '''
 					ssh ec2-user@test "mkdir -p /home/ec2-user/final-proj"
 					ssh ec2-user@test "hostname"
+				   '''
+			} 
+                
+            }
+        }
+		stage('Prod') {
+            steps {
+			echo "Prod"
+			sshagent(credentials: ['ssh-prod-key']) {
+				 sh '''
+					ssh ec2-user@prod "mkdir -p /home/ec2-user/final-proj"
+					ssh ec2-user@prod "hostname"
 				   '''
 			} 
                 
