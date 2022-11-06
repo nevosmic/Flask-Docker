@@ -1,6 +1,6 @@
 echo "Connect to test server"
 echo "Creating project dir"
-SSH_KEY=/var/lib/jenkins/.ssh/id_dsa
+SSH_KEY=/var/lib/jenkins/id_dsa
 JENKINS_WORKSPACE=/var/lib/jenkins/workspace/git and docker connection
 ssh -i $SSH_KEY -o StrictHostKeyChecking=no test "mkdir -p /home/ec2-user/final-proj"
 scp $JENKINS_WORKSPACE/docker-compose.yml ec2-user@test:/home/ec2-user/final-proj/docker-compose.yml
