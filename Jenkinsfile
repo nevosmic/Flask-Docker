@@ -24,6 +24,7 @@ pipeline {
             steps {
 			echo "Test"
 		    sh '''pwd'''
+			sh '''whoami'''
 		    sh '''ls -a'''
 			echo "main_script"
 			sh '''bash main_script.sh'''  
