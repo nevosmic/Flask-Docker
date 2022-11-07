@@ -17,5 +17,5 @@ RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted
 COPY app.py /app
 
 CMD cat /etc/hosts
-CMD cd app; ls -la
-CMD sleep 30;python app/app.py
+CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
+CMD sleep 30;python app.py
