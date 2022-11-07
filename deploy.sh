@@ -1,6 +1,6 @@
 # VARS
 HOME_DIR=/home/ec2-user
-JEMKINS_WORKSPACE=/var/lib/jenkins/workspace/git and docker connection
+JEMKINS_WORKSPACE=/var/lib/jenkins/workspace/Bynet_attendance
 mechine=$1
 
 echo "Connect to $mechine server"
