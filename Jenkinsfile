@@ -5,19 +5,30 @@ pipeline {
     
     agent any
     stages {
-        stage('checkout') {
+		stage('checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build') {
+		stage('Build') {
+			steps {
+				dir("app") {
+					script {
+						image = docker.build(imageTag)
+					}
+				}
+			}
+		}
+		stage('Publish') {
             steps {
                 dir("app") {
-                    script {
-                         image = docker.build(imageTag)
-                    }
-               }
-                
+                script {
+					docker.withRegistry( '', registryCredential ) {
+					dockerImage.push(imagename)
+					
+						}
+					}
+				}
             }
         }
 		stage('Test') {
