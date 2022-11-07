@@ -7,8 +7,8 @@ echo "Creating project dir"
 ssh ec2-user@test "hostname;mkdir -p /home/ec2-user/final;ls -la;"
 echo "Copying docker-compose file to test"
 scp /var/lib/jenkins/workspace/Bynet_attendance/docker-compose.yml ec2-user@test:/home/ec2-user/final/docker-compose.yml
-scp -v /var/lib/jenkins/workspace/Bynet_attendance/.env ec2-user@test:/home/ec2-user/final/.env
+scp /var/lib/jenkins/workspace/Bynet_attendance/.env ec2-user@test:/home/ec2-user/final/.env
 ssh ec2-user@test "cd /home/ec2-user/final;ls -la;"
-ssh "ec2-user@test" "pwd;cd /home/ec2-user/final;pwd;docker-compose up -d;sleep 100;docker container ls;"
-ssh "ec2-user@test" "curl -I localhost:5000"
+ssh ec2-user@test "pwd;cd /home/ec2-user/final;pwd;docker-compose up -d;sleep 100;docker container ls;"
+ssh -v ec2-user@test "curl -I localhost:5000"
 echo "done"
