@@ -25,7 +25,7 @@ pipeline {
                 dir("app") {
                 script {
 					docker.withRegistry( '', registryCredential ) {
-					dockerImage.push(imagename)
+					image.push()
 					
 						}
 					}
