@@ -1,6 +1,7 @@
 version: "2.1"
 services:
   app:
+    build: ./app
     image: nevosmic/bynet_docker:${TAG}
     links:
       - db
