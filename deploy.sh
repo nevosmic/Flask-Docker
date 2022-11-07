@@ -1,8 +1,9 @@
 # VARS
 HOME_DIR="/home/ec2-user"
 JEMKINS_WORKSPACE="/var/lib/jenkins/workspace/Bynet_attendance"
-mechine=$1
-
+input=$1
+echo "$input"
+mechine=test
 echo "Connect to $mechine server"
 echo "Creating project dir"
 ssh "ec2-user@${mechine}" "mkdir -p ${HOME_DIR}/final-proj"
