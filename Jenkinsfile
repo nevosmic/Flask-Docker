@@ -27,10 +27,7 @@ pipeline {
 			sh '''whoami'''
 		    sh '''ls -a'''
 			sshagent(credentials: ['ssh-test-key']) {
-				 sh '''
-					ssh ec2-user@test "mkdir -p /home/ec2-user/final-proj"
-					ssh ec2-user@test "hostname"
-				   '''
+				 sh '''bash deploy.sh test'''
 			} 
                 
             }
