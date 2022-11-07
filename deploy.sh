@@ -8,9 +8,9 @@ echo "Connect to $1 server"
 echo "Creating project dir"
 ssh ec2-user@test "hostname;mkdir -p /home/ec2-user/final;ls -la;"
 echo "Copying docker-compose file to test"
-ssh ec2-user@test "cd /home/ec2-user/final;pwd;"
 scp /var/lib/jenkins/workspace/Bynet_attendance/docker-compose.yml ec2-user@test:/home/ec2-user/final
 scp /var/lib/jenkins/workspace/Bynet_attendance/.env ec2-user@test:/home/ec2-user/final
+ssh ec2-user@test "cd /home/ec2-user/final;pwd;ls;"
 echo "Starting project"
 ssh ec2-user@test "pwd;cd /home/ec2-user/final;ls;pwd;docker-compose up -d;sleep 30;docker container ls; docker-compose down;"
 echo "END UP"
