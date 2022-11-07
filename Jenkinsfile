@@ -27,7 +27,7 @@ pipeline {
 			sh '''whoami'''
 		    sh '''ls -a'''
 			sshagent(credentials: ['ssh-test-key']) {
-				 sh '''bash deploy.sh test'''
+				 sh '''bash deploy.sh "test"'''
 			} 
                 
             }
