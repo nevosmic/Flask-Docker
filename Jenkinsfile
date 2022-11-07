@@ -1,6 +1,7 @@
 pipeline {
      environment {
      ImageTag="nevosmic/bynet_docker:v0.6"
+	 registryCredential="nevosmic_dockehub"
      }
     
     agent any
