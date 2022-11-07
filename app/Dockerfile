@@ -17,4 +17,5 @@ RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted
 COPY app.py /app
 
 CMD cat /etc/hosts
-CMD sleep 15;python app.py
+CMD cd app; ls -la
+CMD sleep 30;python app.py
