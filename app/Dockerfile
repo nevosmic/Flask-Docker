@@ -18,4 +18,4 @@ COPY app.py /app
 
 CMD cat /etc/hosts
 CMD cd app; ls -la
-CMD sleep 30;python app.py
+CMD sleep 30;python app/app.py
