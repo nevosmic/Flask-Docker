@@ -7,6 +7,9 @@ services:
       - db
     ports:
       - "5000:5000"
+    volumes:
+      - ./app:/app
+      - ./db:/db
     environment:
       SFTP_HOST: ${SFTP_HOST}
       SFTP_PORT: ${SFTP_PORT}
