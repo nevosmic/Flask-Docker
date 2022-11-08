@@ -18,4 +18,4 @@ COPY . /app
 
 CMD cat /etc/hosts
 #CMD exec /bin/bash -c "trap : TERM INT; sleep infinity & wait"
-CMD sleep 10;python app.py
+CMD sleep 30;python app.py
