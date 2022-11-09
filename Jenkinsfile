@@ -37,8 +37,7 @@ pipeline {
 			    sh '''whoami'''
 		        sh '''ls -a'''
 			    sshagent(credentials: ['ssh-test-key']) {
-			    sh '''docker pull $image_name'''
-				sh '''bash -x deploy.sh "test"'''
+				sh '''bash -x deploy.sh "test" $image_name'''
 			    }
             }
         }
