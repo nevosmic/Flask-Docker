@@ -1,7 +1,7 @@
 pipeline {
      environment {
      registryCredential="nevosmic_dockehub"
-     image_name= "nevosmic/bynet_docker" + ":v0.7"
+     image_name= "nevosmic/bynet_docker" + ":v-$BUILD_NUMBER"
      dockerImage = ''
      }
     
@@ -55,7 +55,6 @@ pipeline {
 		stage('Clean up') {
             steps {
 			    echo "Clean up"
-			    sh "docker rmi image_name"
             }
         }
     }
