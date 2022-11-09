@@ -1,7 +1,7 @@
 pipeline {
      environment {
      registryCredential="nevosmic_dockehub"
-     image_name= "nevosmic/bynet_docker" + ":v0.6"
+     image_name= "nevosmic/bynet_docker" + ":v0.7"
      dockerImage = ''
      }
     
