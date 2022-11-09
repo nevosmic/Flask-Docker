@@ -1,9 +1,7 @@
 pipeline {
      environment {
-
-     my_docker_repo = "nevosmic/bynet_docker"
      registryCredential="nevosmic_dockehub"
-     image_name = my_docker_repo + ":v-$BUILD_NUMBER"
+     image_name= "nevosmic/bynet_docker" + ":v-$BUILD_NUMBER"
      dockerImage = ''
      }
     
@@ -18,7 +16,7 @@ pipeline {
 			steps {
 				dir("app") {
 					script {
-						dockerImage = docker.build my_docker_repo + ":v-$BUILD_NUMBER"
+						dockerImage = docker.build image_name
 					}
 				}
 			}
