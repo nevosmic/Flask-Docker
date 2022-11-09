@@ -52,5 +52,11 @@ pipeline {
 			    }
             }
         }
+		stage('Clean up') {
+            steps {
+			    echo "Clean up"
+			    sh "docker rmi image_name"
+            }
+        }
     }
 }
