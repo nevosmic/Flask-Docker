@@ -3,6 +3,7 @@ pipeline {
 
      my_docker_repo = "nevosmic/bynet_docker"
      registryCredential="nevosmic_dockehub"
+     image_name = my_docker_repo + ":v-$BUILD_NUMBER"
      dockerImage = ''
      }
     
@@ -38,6 +39,7 @@ pipeline {
 			    sh '''whoami'''
 		        sh '''ls -a'''
 			    sshagent(credentials: ['ssh-test-key']) {
+			    sh '''docker pull $image_name'''
 				sh '''bash -x deploy.sh "test"'''
 			    }
             }
