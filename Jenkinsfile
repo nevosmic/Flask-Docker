@@ -21,15 +21,15 @@ pipeline {
 			}
 		}
 		stage('Publish') {
-            steps {
-                dir("app") {
-                script {
+                   steps {
+                      
+                         script {
 					docker.withRegistry( '', registryCredential ) {
 					image.push()
 					
 						}
 					}
-				}
+				
             }
         }
 		stage('Test') {

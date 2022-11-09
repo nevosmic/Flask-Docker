@@ -1,14 +1,12 @@
 version: "2.1"
 services:
   app:
-    build: ./app
+    build: .
     image: nevosmic/bynet_docker:${TAG}
     links:
       - db
     ports:
       - "5000:5000"
-    volumes:
-      - ./app:/app
     environment:
       SFTP_HOST: ${SFTP_HOST}
       SFTP_PORT: ${SFTP_PORT}
