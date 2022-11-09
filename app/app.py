@@ -18,8 +18,7 @@ def insert_csv_to_db(path_to_csv, file_num, connection):
         :param: file_num: csv file name
         :param: connection: mysql connection object (created in db_connection)
     """
-    # check if the connection is open
-    if connection.open:
+    print('file_num: ',file_num)
     cursor = connection.cursor()
     # check if file is in db
     check_if_file_exists = "SELECT * FROM csv_table WHERE File_Name LIKE {}".format(file_num)
@@ -58,6 +57,7 @@ def parse_times(start_, end_, join_, leave_, duration_):
 @app.route('/')
 def index():
     students_object, header = create_students_display_list_from_csv()
+    print("AFTER create_students_display_list_from_csv")
     return render_template('students.html', headings=header, data=students_object)
 
 
@@ -85,9 +85,12 @@ def create_students_list_csv(connection):
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM csv_table')
     students = cursor.fetchall()
+    print('students:', students)
     # create a csv file with participation statistics
     calculate_attendance(students)
-
+    print("AFTER calculate attendance")
+    cursor.close()
+    connection.close()
 
 def create_students_display_list_from_csv():
     """
@@ -96,6 +99,7 @@ def create_students_display_list_from_csv():
             :return students: an object with students statistics
             :return header
     """
+    print('START create_students_display_list_from_csv')
     csvfile = open('attendance_output.csv', newline='')
     # make a new variable - c - for Python's DictReader object
     c = csv.DictReader(csvfile)
@@ -110,10 +114,17 @@ def create_students_display_list_from_csv():
 
 """ DOTO: 1)log file """
 if __name__ == '__main__':
+    print('BEFORE GET CONNECTION TO MYSQL')
     connection = get_connection_to_mysql()
-    init_table(connection)
+    print('AFTER GET CONNECTION TO MYSQL')
+    connection = init_table(connection)
+    print('AFTER init_table')
     csv_files_handler(connection)
+    print('AFTER INSERT TO DATABASE')
     create_students_list_csv(connection)
-
+    print('AFTER CREATE STUDENTS LIST')
     app.run(host='0.0.0.0', debug=True)
+    print("App is Up")
+
+
 

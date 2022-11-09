@@ -323,8 +323,9 @@ def calculate_attendance(db_fetch):
     new_df = add_names(new_df, init_dict)
     new_df.to_csv("not_final_output.csv")
     final_df = pd.concat([new_df.iloc[:, 0:1], new_df.iloc[:, -2:]], axis=1)
-    print("DONE!!!")
+    print(final_df)
     final_df.to_csv('attendance_output.csv')
+    print("DONE!!!")
 
 
 if __name__ == '__main__':

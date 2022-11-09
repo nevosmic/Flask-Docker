@@ -1,5 +1,5 @@
-flask
-mysql-connector-python
-pysftp
-pandas
-jellyfish
+flask==2.2.2
+mysql-connector-python==8.0.31
+pysftp==0.2.9
+pandas==1.3.5
+jellyfish==0.9.0
