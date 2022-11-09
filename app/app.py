@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from db_connection import *
 from sftp_connection import *
 from calculate_attendance import *
+#from db_init import *
 import csv
 
 
@@ -17,7 +18,10 @@ def insert_csv_to_db(path_to_csv, file_num, connection):
         :param: file_num: csv file name
         :param: connection: mysql connection object (created in db_connection)
     """
+    # check if the connection is open
+    if connection.open:
     cursor = connection.cursor()
+    # check if file is in db
     check_if_file_exists = "SELECT * FROM csv_table WHERE File_Name LIKE {}".format(file_num)
     cursor.execute(check_if_file_exists)
     file_in_db = cursor.fetchall()
@@ -107,6 +111,7 @@ def create_students_display_list_from_csv():
 """ DOTO: 1)log file """
 if __name__ == '__main__':
     connection = get_connection_to_mysql()
+    init_table(connection)
     csv_files_handler(connection)
     create_students_list_csv(connection)
 
