@@ -9,14 +9,14 @@ echo "Copy docker compose file to $MACHINE server"
 scp /var/lib/jenkins/workspace/Bynet_attendance/docker-compose.yml ec2-user@$MACHINE:/home/ec2-user/final_proj/docker-compose.yml
 echo "Copy env file to $MACHINE server"
 scp /var/lib/jenkins/workspace/Bynet_attendance/.env ec2-user@$MACHINE:/home/ec2-user/final_proj/.env
-ssh -v ec2-user@$MACHINE "cd /home/ec2-user/final_proj;ls -la;docker pull $IMAGE;docker-compose up -d --no-build;sleep 30;docker container ls -a;sleep 60;"
-#ssh -v ec2-user@$MACHINE "curl -Is 13.230.64.25:5000"
+ssh ec2-user@$MACHINE "cd /home/ec2-user/final_proj;ls -la;docker pull $IMAGE;docker-compose up -d --no-build;sleep 30;docker container ls -a;sleep 80;"
+ssh -v ec2-user@$MACHINE "curl -Is localhost:5000;"
 if [ $MACHINE == "test" ]
 then
 	echo "Copy test file to $MACHINE server"
 	scp /var/lib/jenkins/workspace/Bynet_attendance/test.sh ec2-user@$MACHINE:/home/ec2-user/test.sh
 	echo "TESTING.."
-	ssh -v ec2-user@$MACHINE "ls -la;bash test.sh;"
+	ssh ec2-user@$MACHINE "ls -la;bash test.sh;"
 	echo "Cleaning in TEST server"
 else
 	echo "Cleaning in $MACHINE server"

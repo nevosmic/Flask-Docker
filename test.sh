@@ -2,7 +2,7 @@
 URL=localhost:5000
 RESULT=`curl -s -I ${URL} | grep HTTP | awk {'print $2'}`
 echo $RESULT
-if [ $RESULT -eq 200 ]
+if [[ $RESULT -eq 200 ]]
 then
 	echo " OK !"
 else
