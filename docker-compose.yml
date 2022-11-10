@@ -21,6 +21,7 @@ services:
     ports:
       - "3306:3306"
     environment:
+      MYSQL_ROOT_USERNAME: ${MYSQL_DB}
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
     healthcheck:
