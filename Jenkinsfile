@@ -33,9 +33,6 @@ pipeline {
 		stage('Test') {
             steps {
 			    echo "Test"
-		        sh '''pwd'''
-			    sh '''whoami'''
-		        sh '''ls -a'''
 			    sshagent(credentials: ['ssh-test-key']) {
 				sh '''bash -x deploy.sh "test" $image_name'''
 			    }
@@ -45,10 +42,7 @@ pipeline {
             steps {
 			    echo "Prod"
 			    sshagent(credentials: ['ssh-prod-key']) {
-				    sh '''
-					ssh ec2-user@prod "mkdir -p /home/ec2-user/final-proj"
-					ssh ec2-user@prod "hostname"
-				   '''
+				    sh '''bash -x deploy.sh "prod" $image_name'''
 			    }
             }
         }
