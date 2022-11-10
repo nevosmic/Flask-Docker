@@ -1,17 +1,17 @@
 pipeline {
-     environment {
-     registryCredential="nevosmic_dockehub"
-     image_name= "nevosmic/bynet_docker" + ":v-$BUILD_NUMBER"
-     dockerImage = ''
-     }
+	environment {
+	 registryCredential="nevosmic_dockehub"
+	 image_name= "nevosmic/bynet_docker" + ":v-$BUILD_NUMBER"
+	 dockerImage = ''
+	}
     
-    agent any
-    stages {
+	agent any
+	stages {
 		stage('checkout') {
-            steps {
-                checkout scm
-            }
-        }
+			steps {
+				checkout scm
+			}
+		}
 		stage('Build') {
 			steps {
 				dir("app") {
@@ -22,35 +22,35 @@ pipeline {
 			}
 		}
 		stage('Publish') {
-            steps {
-                script {
-			        docker.withRegistry( '', registryCredential ) {
+			steps {
+				script {
+					docker.withRegistry( '', registryCredential ) {
 					dockerImage.push()
 					}
-			    }
-            }
-        }
+				}
+			}
+		}
 		stage('Test') {
-            steps {
-			    echo "Test"
-			    sshagent(credentials: ['ssh-test-key']) {
-				sh '''bash deploy.sh "test" $image_name'''
-			    }
-            }
-        }
+			steps {
+				echo "Test"
+				sshagent(credentials: ['ssh-test-key']) {
+				    sh '''bash -xe deploy.sh "test" $image_name'''
+				}
+			}
+		}
 		stage('Prod') {
-            steps {
-			    echo "Prod"
-			    sshagent(credentials: ['ssh-prod-key']) {
-				    sh '''bash deploy.sh "prod" $image_name'''
-			    }
-            }
-        }
+			 steps {
+				echo "Prod"
+				sshagent(credentials: ['ssh-prod-key']) {
+				    sh '''bash -xe deploy.sh "prod" $image_name'''
+				}
+			}
+		}
 		stage('Clean up') {
-            steps {
-			    echo "Clean up"
+			steps {
+				echo "Clean up"
 				sh "docker rmi $image_name"
-            }
-        }
-    }
+			}
+		}
+	}
 }
