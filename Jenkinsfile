@@ -34,7 +34,7 @@ pipeline {
             steps {
 			    echo "Test"
 			    sshagent(credentials: ['ssh-test-key']) {
-				sh '''bash -x deploy.sh "test" $image_name'''
+				sh '''bash deploy.sh "test" $image_name'''
 			    }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
             steps {
 			    echo "Prod"
 			    sshagent(credentials: ['ssh-prod-key']) {
-				    sh '''bash -x deploy.sh "prod" $image_name'''
+				    sh '''bash deploy.sh "prod" $image_name'''
 			    }
             }
         }
